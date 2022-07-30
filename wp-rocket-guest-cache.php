@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WP Rocket Guest Cache
  * Description: Serve the guest cache to everyone, even loggedin users.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Plugin URI: https://sanderdekroon.xyz
  * Author: sanderdekroon
  * Author URI: https://sanderdekroon.xyz
@@ -39,17 +39,6 @@ class GuestCachePlugin
         $classInject = '
             class SdkGuestCache extends \WP_Rocket\Buffer\Cache
             {
-                protected $sdkConfig;
-
-                public function __construct(
-                    \WP_Rocket\Buffer\Tests $tests,
-                    \WP_Rocket\Buffer\Config $config,
-                    array $args
-                ) {
-                    parent::__construct($tests, $config, $args);
-                    $this->sdkConfig = $config;
-                }
-
                 public function get_cache_path($args = [])
                 {
                     $path = parent::get_cache_path($args);
@@ -58,11 +47,7 @@ class GuestCachePlugin
                         return $path;
                     }
 
-                    return str_replace(
-                        "-loggedin-" . $this->sdkConfig->get_config("secret_cache_key"),
-                        "",
-                        $path
-                    );
+                    return preg_replace("/(-loggedin-[\w-]+)/", "", $path);
                 }
             }';
 
