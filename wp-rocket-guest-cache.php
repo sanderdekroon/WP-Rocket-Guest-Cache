@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WP Rocket Guest Cache
  * Description: Serve the guest cache to everyone, even loggedin users.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Plugin URI: https://sanderdekroon.xyz
  * Author: sanderdekroon
  * Author URI: https://sanderdekroon.xyz
@@ -68,6 +68,10 @@ class GuestCachePlugin
 
     protected function isMissingRequiredPlugin(): bool
     {
+        if (! function_exists('is_plugin_active')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
         foreach ($this->requiredPlugins as $plugin) {
             if (! is_plugin_active($plugin)) {
                 return true;
